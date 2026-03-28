@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Angel Avelar — Personal Website</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:    #1a1a1a;
+      --muted:  #6b7280;
+      --accent: #c0392b;
+      --bg:     #faf8f5;
+      --sidebar-bg: #f2ede6;
+      --border: #e2dbd0;
+      --card-bg: #ffffff;
+      --sidebar-w: 260px;
+      --font-serif: 'DM Serif Display', Georgia, serif;
+      --font-sans:  'DM Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-weight: 300;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* ── LAYOUT ─────────────────────────────────── */
+    .wrapper {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── SIDEBAR ─────────────────────────────────── */
+
+    /*
+      BACKGROUND IMAGE:
+      To use a background image, set --sidebar-bg-image to a URL, e.g.:
+        --sidebar-bg-image: url('your-image.jpg');
+      The dark overlay opacity is controlled by --sidebar-overlay-opacity (0–1).
+    */
+    :root {
+      --sidebar-bg-image: none;       /* e.g. url('bg.jpg')  */
+      --sidebar-overlay-opacity: 0.55;
+    }
+
+    aside {
+      width: var(--sidebar-w);
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.25rem;
+      overflow-y: auto;
+      /* Background image + fallback color */
+      background-color: #1c1a18;
+      background-image: var(--sidebar-bg-image);
+      background-size: cover;
+      background-position: center;
+      isolation: isolate;
+    }
+
+    /* Dark overlay so text stays readable over any image */
+    aside::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, var(--sidebar-overlay-opacity));
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* All direct children sit above the overlay */
+    aside > * { position: relative; z-index: 1; }
+
+    /* Padding wrapper so the first child isn't flush to the top */
+    aside { padding: 2.5rem 1.75rem; }
+
+    .avatar {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.15);
+      border: 3px solid rgba(255,255,255,.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+      box-shadow: 0 4px 24px rgba(0,0,0,.4);
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .avatar-placeholder {
+      font-size: 2.5rem;
+      color: rgba(255,255,255,.7);
+      user-select: none;
+    }
+
+    .sidebar-name {
+      font-family: var(--font-serif);
+      font-size: 1.3rem;
+      text-align: center;
+      line-height: 1.25;
+      color: #ffffff;
+      text-shadow: 0 1px 6px rgba(0,0,0,.5);
+    }
+
+    .sidebar-title {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,.65);
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .sidebar-divider {
+      width: 40px;
+      height: 1px;
+      background: rgba(255,255,255,.25);
+    }
+
+    /* social icons */
+    .socials {
+      display: flex;
+      gap: 0.65rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .socials a {
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,.85);
+      text-decoration: none;
+      transition: border-color .2s, color .2s, background .2s;
+      backdrop-filter: blur(4px);
+    }
+
+    .socials a:hover {
+      background: rgba(255,255,255,.25);
+      border-color: rgba(255,255,255,.7);
+      color: #ffffff;
+    }
+
+    .socials svg { width: 16px; height: 16px; fill: currentColor; }
+
+    /* nav links */
+    nav {
+      width: 100%;
+      margin-top: auto;
+    }
+
+    nav a {
+      display: block;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      font-weight: 500;
+      color: rgba(255,255,255,.55);
+      text-decoration: none;
+      padding: 0.35rem 0;
+      border-left: 2px solid transparent;
+      padding-left: 0.75rem;
+      transition: color .2s, border-color .2s;
+    }
+
+    nav a:hover {
+      color: #ffffff;
+      border-color: rgba(255,255,255,.8);
+    }
+
+    /* ── MAIN ─────────────────────────────────── */
+    main {
+      flex: 1;
+      padding: 3.5rem clamp(1.5rem, 5vw, 4rem);
+      max-width: 780px;
+    }
+
+    .page-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      line-height: 1.15;
+      margin-bottom: 0.25rem;
+    }
+
+    .page-subtitle {
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 3rem;
+    }
+
+    /* ── SECTIONS ─────────────────────────────── */
+    section {
+      margin-bottom: 3.5rem;
+    }
+
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+
+    h2 {
+      font-family: var(--font-serif);
+      font-size: 1.55rem;
+      font-weight: 400;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    p { margin-bottom: 0.85rem; color: #3d3d3d; }
+    p:last-child { margin-bottom: 0; }
+
+    /* ── PUBLICATION CARDS ─────────────────────── */
+    .pub-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .pub-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.1rem 1.25rem;
+      transition: border-color .2s, box-shadow .2s;
+    }
+
+    .pub-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 2px 12px rgba(192,57,43,.08);
+    }
+
+    .pub-title {
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .pub-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .pub-link {
+      font-size: 0.78rem;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .pub-link:hover { text-decoration: underline; }
+
+    /* ── NEWS LIST ─────────────────────────────── */
+    .news-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .news-item {
+      display: flex;
+      gap: 1.1rem;
+      align-items: flex-start;
+    }
+
+    .news-date {
+      font-size: 0.75rem;
+      color: var(--muted);
+      white-space: nowrap;
+      padding-top: 0.15rem;
+      min-width: 75px;
+    }
+
+    .news-text {
+      font-size: 0.9rem;
+      color: #3d3d3d;
+    }
+
+    /* ── AWARDS ─────────────────────────────────── */
+    .award-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .award-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.9rem;
+    }
+
+    .award-item::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    /* ── RESPONSIVE ──────────────────────────────── */
+    @media (max-width: 700px) {
+      .wrapper { flex-direction: column; }
+
+      aside {
+        position: relative;
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 2rem 1.5rem;
+        gap: 1rem;
+        min-height: 220px;
+        background-attachment: scroll;
+      }
+
+      nav { display: none; }
+
+      main { padding: 2rem 1.25rem; }
+    }
+
+    /* ── FADE-IN ANIMATION ───────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    section {
+      animation: fadeUp .5s ease both;
+    }
+
+    section:nth-child(1) { animation-delay: .05s; }
+    section:nth-child(2) { animation-delay: .15s; }
+    section:nth-child(3) { animation-delay: .25s; }
+    section:nth-child(4) { animation-delay: .35s; }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- ── SIDEBAR ── -->
+  <aside>
+    <div class="avatar">
+      <!-- Replace with your photo: <img src="photo.jpg" alt="Your Name" /> -->
+      <span class="avatar-placeholder"><img src="./images/professional_profile.jpeg" alt="Angel Avelar"/></span>
+    </div>
+
+    <div class="sidebar-name">Angel Rodrigo Avelar Menendez</div>
+    <div class="sidebar-title">PhD Student · Statistics</div>
+
+    <div class="sidebar-divider"></div>
+
+    <!-- Social Icons -->
+    <div class="socials">
+      <!-- GitHub -->
+      <!-- <a href="https://github.com/" target="_blank" aria-label="GitHub">
+        <svg viewBox="0 0 24 24"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.1 3.3 9.42 7.88 10.95.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.54-3.88-1.54-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.2 1.77 1.2 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.23-1.28-5.23-5.68 0-1.25.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.04 0 0 .96-.31 3.15 1.18a10.95 10.95 0 0 1 5.74 0c2.19-1.49 3.15-1.18 3.15-1.18.62 1.58.23 2.75.11 3.04.74.8 1.18 1.83 1.18 3.08 0 4.41-2.69 5.38-5.25 5.66.41.36.78 1.06.78 2.13v3.16c0 .31.21.67.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>
+      </a> -->
+      <!-- Google Scholar -->
+      <!-- <a href="https://scholar.google.com/" target="_blank" aria-label="Google Scholar">
+        <svg viewBox="0 0 24 24"><path d="M5.242 13.769L0 9.5 12 0l12 9.5-5.242 4.269C17.548 11.249 14.978 9.5 12 9.5c-2.977 0-5.548 1.748-6.758 4.269zM12 10a7 7 0 1 0 0 14 7 7 0 0 0 0-14zm0 2a5 5 0 1 1 0 10A5 5 0 0 1 12 12zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg>
+      </a> -->
+      <!-- LinkedIn -->
+      <a href="https://www.linkedin.com/in/angel-rodrigo-avelar-menendez-a4239b162/" target="_blank" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.37V9h3.41v1.56h.05c.48-.91 1.64-1.86 3.37-1.86 3.6 0 4.27 2.37 4.27 5.46v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zm1.78 13.02H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
+      </a>
+      <!-- Email -->
+      <a href="mailto:aavelarm@g.ucla.edu" aria-label="Email">
+        <svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
+      </a>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <!-- Page nav -->
+    <nav>
+      <a href="#bio">Bio</a>
+      <a href="#publications">Publications</a>
+      <a href="#news">News</a>
+      <a href="#awards">Awards</a>
+    </nav>
+  </aside>
+
+  <!-- ── MAIN CONTENT ── -->
+  <main>
+    <div class="page-title">My Personal Website</div>
+    <div class="page-subtitle">University of California, Los Angeles · Statistics & Data Science</div>
+
+    <!-- BIO -->
+    <section id="bio">
+      <!-- <div class="section-label">About</div> -->
+      <h2>Bio</h2>
+      <p>
+        I am a second-year PhD student in the Department of Statistics and Data Science at <strong>University of California, Los Angeles</strong>,
+        advised by <a href="https://www.xiaowudai.org/" style="color:var(--accent);">Prof. Xiaowu Dai</a>.
+        </p>
+        <p>
+        My research focuses on uncertainty quantification of LLM rankings based on human preferences. In particular, I am working on constructing prompt-dependent confidence intervals for the rankings of LLMs. Building on this framework, I am currently designing a routing system for LLMs under cost constraints.
+      </p>
+      <p>
+        Prior to my PhD, I received my B.S. in Computer Science from the California Institute of Technology.
+      </p>
+    </section>
+
+    <!-- PUBLICATIONS -->
+    <section id="publications">
+      <!-- <div class="section-label">Research</div> -->
+      <h2>Publications</h2>
+      <div class="pub-list">
+
+        <div class="pub-card">
+          <div class="pub-title">Prompt-Dependent Ranking of Large Language Models with Uncertainty Quantification</div>
+          <div class="pub-meta">Angel Avelar, Yufeng Liu, Xiaowu Dai</div>
+          <a class="pub-link" href="https://arxiv.org/pdf/2603.03336">[preprint]</a>
+        </div>
+<!-- 
+        <div class="pub-card">
+          <div class="pub-title">Another Research Paper Title</div>
+          <div class="pub-meta">Alex Morgan, Another Co-author · Workshop Name @ Conference 2023</div>
+          <a class="pub-link" href="#">[PDF]</a>&nbsp;&nbsp;
+          <a class="pub-link" href="#">[Slides]</a>
+        </div>
+
+        <div class="pub-card">
+          <div class="pub-title">Preprint or Workshop Paper</div>
+          <div class="pub-meta">Alex Morgan · arXiv 2023</div>
+          <a class="pub-link" href="#">[arXiv]</a>
+        </div> -->
+
+      </div>
+    </section>
+
+    <!-- NEWS -->
+    <section id="news">
+      <div class="section-label">Updates</div>
+      <h2>News</h2>
+      <div class="news-list">
+        <div class="news-item">
+          <span class="news-date">September 2024</span>
+          <span class="news-text">Joined UCLA as a PhD student!</span>
+        </div>
+        <!-- <div class="news-item">
+          <span class="news-date">Jan 2024</span>
+          <span class="news-text">Started internship at <strong>Company / Lab Name</strong> for the summer.</span>
+        </div>
+        <div class="news-item">
+          <span class="news-date">Sep 2023</span>
+          <span class="news-text">Presented work at the <strong>Workshop Name</strong> at Conference.</span>
+        </div>
+        <div class="news-item">
+          <span class="news-date">Jun 2023</span>
+          <span class="news-text">Joined the <strong>Lab Name</strong> as a PhD student. Excited to get started!</span>
+        </div> -->
+      </div>
+    </section>
+
+    <!-- AWARDS -->
+    <section id="awards">
+      <!-- <div class="section-label">Honors</div> -->
+      <h2>Awards</h2>
+      <div class="award-list">
+        <div class="award-item">Eugene Cota Robles Fellowship — 2024</div>
+      </div>
+    </s
